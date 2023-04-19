@@ -1,0 +1,38 @@
+
+set xlabel "{/TimesItalic=16 x}" offset -4,0
+set ylabel "{/TimesItalic=16 Probability density f(x)}" 
+set title "{/TimesItalic=16 Normal distribution N({/Symbol m}, {/Symbol s})}"  
+set xrange [-5.5:7]
+set yrange [-0.05:1.05]
+set xtics -5.0, 2.5, 5.0
+set ytics 0, 0.2, 1.0
+set style line 1 lc rgb "black" lt 1 lw 1 dashtype 18
+set grid linestyle 1
+set grid xtics
+set grid ytics
+set grid mxtics
+set grid mytics
+set mxtics 5
+set mytics 2
+
+set size ratio 0.5
+set key samplen 3 spacing 1
+set ytics font "Times,20"
+set key box
+set key width -1 height 0.3
+
+f(x)=(1/sqrt(0.2*2*pi))*exp(-(x)**2/(2*0.2))
+y(x)=(1/sqrt(1*2*pi))*exp(-(x)**2/(2*1))
+z(x)=(1/sqrt(5.0*2*pi))*exp(-(x)**2/(2*5))
+g(x)=(1/sqrt(0.5*2*pi))*exp(-(x-(-2))**2/(2*0.5))
+plot f(x) lw 2 linecolor rgb "black" title "{/symbol m}=0, {/symbol s}^2=0.2", \
+y(x) lw 2 linecolor rgb "red" title "{/symbol m}=0, {/symbol s}^2=1.0", \
+z(x) lw 2 linecolor rgb "green" title "{/symbol m}=0, {/symbol s}^2=5.0", \
+g(x) lw 2 linecolor rgb "blue" title "{/symbol m}=-2, {/symbol s}^2=0.5"
+
+
+set terminal svg
+set output  "cw_11.svg"
+replot
+set output
+set terminal qt

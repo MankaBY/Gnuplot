@@ -1,0 +1,44 @@
+
+reset session
+
+set encoding iso_8859_1
+set xlabel font "Time,18" "Force density F_{density} (eV {\305}^{-2})"
+set encoding iso_8859_1
+set ylabel font "Time,18" "Beam deflection {/symbol D}_{x} ({\305})" 
+set title font "Time,18" "Beam deflection for uniformly \n distributed load"
+
+set xrange [0.0:3.6]
+set xtics font "Time,16" 0.0, 0.5, 3.5 
+set mxtics 5
+
+set yrange [0.0:12.5]
+set ytics font "Times,16" 0.0, 4.0, 12.0 
+set mytics 5
+
+f(x)=a1*x**4+b1*x**3+c1*x**2+d1*x+e1
+g(x)=a2*x**4+b2*x**3+c2*x**2+d2*x+e2
+fit f(x) "cw_3_data_1.txt" using 1:3 via a1,b1,c1,d1,e1
+fit g(x) "cw_3_data_2.txt" using 1:3 via a2,b2,c2,d2,e2
+
+set samples 1000
+
+set size ratio 0.8 
+set key samplen 3 spacing 1
+set key font "Times,16"
+set key left top nobox
+set key width -6 height 0.3
+set style data points
+set key reverse Left
+
+
+
+plot "cw_3_data_1.txt" using 1:3:2:4 with xyerrorbars pointtype 5 pointsize 0.5 linecolor rgb "red" title "T=300 K, data",\
+	"cw_3_data_2.txt" using 1:3:2:4 with xyerrorbars pointtype 5 pointsize 0.5 linecolor rgb "blue" title "T=400 K, data",\
+    f(x) with lines lt 0 linecolor rgb "red" title "T=300 K, fit",\
+    g(x) with lines lt 0 linecolor rgb "blue" title "T=400 K, fit"
+	
+set terminal svg
+set output  "cw_3.svg"
+replot
+set output
+set terminal qt

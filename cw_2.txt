@@ -1,0 +1,44 @@
+reset session
+
+set xlabel "{/Times=18 Time {/:Italic=18 t}} {/Times=18(ms)}"
+set ylabel "{/Times=18 Amplitude {/:Italic=18 A}} {/Times=18(arb. unit)}" 
+set title "{/Times=18 Damped oscillations}"
+
+set xrange [-0.5:5.5]
+set xtics font "Time,18" 0.0, 1.0, 5.0 
+set mxtics 2
+
+set yrange [-11.0:11.0]
+set ytics font "Times,18" -10.0, 5.0, 10.0 
+set mytics 5
+
+A(x)=a*exp(-b*x*x)*sin(c*x)
+a=10.0
+b=1.0
+c=10.0
+fit A(x) "cw_2_dane.txt" using 1:2 via a,b,c
+
+set samples 1000
+set arrow from 2.8, -6.0 to 2.2, 2.8 linecolor rgb "blue" linewidth 2.0
+set arrow from 2.8, -6.5 to 2.0, -4.8 linecolor rgb "blue" linewidth 2.0
+
+set label "envelope" at 2.9,-6.2 font "Time,18"
+
+set size ratio 0.5
+set key samplen 3 spacing 1
+set key font "Times,24"
+set key box
+set key width -6 height 0.3
+
+obw_gora(x)=a*exp(-b*x*x)
+obw_dol(x)=-obw_gora(x)
+
+plot "cw_2_dane.txt" using 1:2 with points pointtype 79 pointsize 1 linecolor rgb "red" title "{/Times=18 measured", [0.0:5.5] A(x) lw 1.5 linecolor rgb "black" title "{/Times=18 theoretical",\
+    [0.0:5.5] obw_gora(x) with lines lt 0 linecolor rgb "blue" notitle,\
+	[0.0:5.5] obw_dol(x) with lines lt 0 linecolor rgb "blue" notitle
+	
+set terminal svg
+set output  "cw_2.svg"
+replot
+set output
+set terminal qt
